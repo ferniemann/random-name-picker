@@ -1,5 +1,3 @@
-const textField = document.getElementById("text-field")
-const btnAdd = document.getElementById("btn-add-names")
 const btnPick = document.getElementById("btn-pick")
 const btnDeleteAll = document.getElementById("btn-delete-all")
 let names = []
@@ -8,22 +6,28 @@ btnPick.hidden = true
 btnDeleteAll.hidden = true
 
 function addNames() {
+    const textField = document.getElementById("text-field")
     const newNames = textField.value.split("\n")
-    console.log(newNames)
     names = names.concat(newNames)
-    console.log(names)
     textField.value = ""
     renderNames()
 }
 
-btnAdd.addEventListener("click", addNames)
-btnPick.addEventListener("click", pickName)
-btnDeleteAll.addEventListener("click", function() {
-    names = []
-    renderNames()
-    btnDeleteAll.hidden = true
-    btnPick.hidden = true
-})
+function eventHandler() {
+    const btnAdd = document.getElementById("btn-add-names")
+    const buttonsDelete = document.querySelectorAll(".btn-delete")
+
+    btnAdd.addEventListener("click", addNames)
+    btnPick.addEventListener("click", pickName)
+    btnDeleteAll.addEventListener("click", function() {
+        names = []
+        renderNames()
+        btnDeleteAll.hidden = true
+        btnPick.hidden = true
+    })
+
+    buttonsDelete.forEach(button => button.addEventListener("click", deleteName))
+}
 
 function renderNames() {
     list.innerHTML = ""
@@ -43,12 +47,13 @@ function renderNames() {
 
         const btnDelete = document.createElement("button")
         btnDelete.classList.add("btn-delete")
-        btnDelete.innerText = "X"
-        btnDelete.addEventListener("click", deleteName)
+        btnDelete.innerText = "+"
         listElement.append(btnDelete)
 
         list.append(listElement)
     }
+
+    eventHandler()
 }
 
 function deleteName(e) {
@@ -79,4 +84,6 @@ function removePickedName(i) {
 
 function randomNumber(min, max) { 
     return Math.floor(Math.random() * (max - min) + min);
-} 
+}
+
+eventHandler()
